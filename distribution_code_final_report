@@ -1,0 +1,99 @@
+library(maps)
+library(ggmap)
+library(tidyverse)
+library(ggplot2)
+library(patchwork)
+
+
+btopsis_data <- read.csv("clean_fungus_data.csv")
+picea_data <- read_tsv("picea_data.csv")
+pinus_data <- read_tsv("pinus_data.csv")
+pseudotsuga_data <- read_tsv("pseudotsuga_data.csv")
+tsuga_data <- read_tsv("tsuga_data.csv")
+#Map of North America
+PNW <- c(left = -140, bottom = 25, right = -50, top = 57)
+map <- get_stadiamap (PNW, zoom = 5, maptype = 'stamen_terrain') 
+
+#Coordinates of specimen:
+specimen <- data.frame(decimalLongitude = -123.1103,
+                       decimalLatitude = 49.35567)
+#Map of Boletopsis grisea, B. leucomelaena and density of Picea
+btopsis_map_picea_density <- ggmap(map) + 
+  stat_density2d(
+    aes(x = decimalLongitude, y = decimalLatitude, fill = ..level.., alpha = 0.001),
+    size = 0.01, bins = 100, data= picea_data, geom = "polygon") +
+  geom_point(data = btopsis_data,
+             mapping = aes(x = dec_long, y = dec_lat, colour = species, shape = factor(species))) 
+  
+#Map of Boletopsis grisea, B. leucomelaena and Picea
+btopsis_map_picea_points <- ggmap(map) + 
+ geom_point(data = picea_data, size = 0.02, mapping =
+    aes(x = decimalLongitude, y = decimalLatitude)) +
+  geom_point(data = btopsis_data,
+             mapping = aes(x = dec_long, y = dec_lat, colour = species, shape = factor(species))) +
+  geom_point(data = specimen, size = 2, color = "green",
+             mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
+  theme(legend.position = "none") +
+  labs(y = "Latitude", x = "Longitude")
+
+
+
+#Map of Boletopsis grisea, B. leucomelaena and density of Pinus
+btopsis_map_pinus_density <- ggmap(map) + 
+  stat_density2d(
+    aes(x = decimalLongitude, y = decimalLatitude, fill = ..level.., alpha = 0.001),
+    size = 0.01, bins = 100, data= pinus_data, geom = "polygon") +
+  geom_point(data = btopsis_data,
+             mapping = aes(x = dec_long, y = dec_lat, colour = species, shape = factor(species))) 
+
+#Map of Boletopsis grisea, B. leucomelaena and Pinus
+btopsis_map_pinus_points <- ggmap(map) + 
+  geom_point(data = pinus_data, size = 0.02, mapping =
+               aes(x = decimalLongitude, y = decimalLatitude)) +
+  geom_point(data = btopsis_data,
+             mapping = aes(x = dec_long, y = dec_lat, colour = species, shape = factor(species))) +
+  geom_point(data = specimen, size = 2, color = "green",
+             mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
+  theme(legend.position = "none") +
+  labs(y = "Latitude", x = "Longitude")
+
+
+#Map of Boletopsis grisea, B. leucomelaena and density of Pseudotusga
+btopsis_map_pseudotsuga_density <- ggmap(map) + 
+  stat_density2d(
+    aes(x = decimalLongitude, y = decimalLatitude, fill = ..level.., alpha = 0.001),
+    size = 0.01, bins = 100, data= pseudotsuga_data, geom = "polygon") +
+  geom_point(data = btopsis_data,
+             mapping = aes(x = dec_long, y = dec_lat, colour = species, shape = factor(species))) 
+
+
+#Map of Boletopsis grisea, B. leucomelaena and Pseudotsuga
+btopsis_map_pseudotsuga_points <- ggmap(map) + 
+  geom_point(data = pseudotsuga_data, size = 0.02, mapping =
+               aes(x = decimalLongitude, y = decimalLatitude)) +
+  geom_point(data = btopsis_data,
+             mapping = aes(x = dec_long, y = dec_lat, colour = species, shape = factor(species))) +
+  geom_point(data = specimen, size = 2, color = "green",
+             mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
+  theme(legend.position = "none") +
+  labs(y = "Latitude", x = "Longitude")
+
+
+#Map of Boletopsis grisea, B. leucomelaena and density of Tsuga
+btopsis_map_tsuga_density <- ggmap(map) + 
+  stat_density2d(
+    aes(x = decimalLongitude, y = decimalLatitude, fill = ..level.., alpha = 0.001),
+    size = 0.01, bins = 100, data= tsuga_data, geom = "polygon") +
+  geom_point(data = btopsis_data,
+             mapping = aes(x = dec_long, y = dec_lat, colour = species, shape = factor(species)))
+
+#Map of Boletopsis grisea, B. leucomelaena and Tsuga
+btopsis_map_tsuga_points <- ggmap(map) + 
+  geom_point(data = tsuga_data, size = 0.02, mapping =
+               aes(x = decimalLongitude, y = decimalLatitude)) +
+  geom_point(data = btopsis_data,
+             mapping = aes(x = dec_long, y = dec_lat, colour = species, shape = factor(species))) +
+  geom_point(data = specimen, size = 2, color = "green",
+             mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
+  theme(legend.position = "none") +
+ labs(y = "Latitude", x = "Longitude")
